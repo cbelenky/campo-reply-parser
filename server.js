@@ -259,7 +259,8 @@ Respond ONLY with a JSON object, no markdown, no backticks:
   const data = await response.json();
   if (!response.ok) throw new Error(`Anthropic API error: ${JSON.stringify(data)}`);
   const raw = data.content.map(i => i.text || "").join("").trim();
-  return JSON.parse(raw);
+  const clean = raw.replace(/```json|```/g, "").trim();
+  return JSON.parse(clean);
 }
 
 // ─── Helper ───────────────────────────────────────────────────────────────────
@@ -277,4 +278,3 @@ app.listen(PORT, () => {
   pollAndProcess();
   setInterval(pollAndProcess, POLL_INTERVAL_MS);
 });
-
